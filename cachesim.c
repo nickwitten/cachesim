@@ -43,6 +43,8 @@ int num_offset_bits;    // Number of offset bits
 int num_index_bits;     // Number of index bits. 
 int num_tag_bits;       // Number of tag bits.
 
+int cache_ind;
+
 /**
  * Function to intialize your cache simulator with the given cache parameters. 
  * Note that we will only input valid parameters and all the inputs will always 
@@ -85,6 +87,72 @@ void cachesim_init(int _block_size, int _cache_size, int _ways) {
     ////////////////////////////////////////////////////////////////////
 }
 
+void miss(int block_ind, cache_set_t* cache_set, int tag) {
+    // Cache miss, grab block
+    misses++;
+    int lru_ind = lru_stack_get_lru(cache_set->stack);
+    cache_block_t block = cache_set->blocks[lru_ind];
+    // Check if we need to writeback an lru block
+    if (block.dirty) {
+        writebacks++;
+    }
+    block.tag = tag;
+    block.valid = 1;
+    block.dirty = 0;
+    static int ctr = 0;
+    ctr++;
+    if (ctr == 10000) {
+        exit(1);
+    }
+    cache_set->blocks[lru_ind] = block;
+    lru_stack_set_mru(cache_set->stack, lru_ind);
+    if (cache_ind == 0) {
+        printf("Replacing block %i\n", lru_ind);
+        printf("\n");
+    }
+}
+
+void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
+    if (block_ind == -1) {
+        miss(block_ind, cache_set, tag);
+    } else {
+        // Grab value and set mru
+        lru_stack_set_mru(cache_set->stack, block_ind);
+        hits++;
+        if (cache_ind == 0) {
+            printf("Hit on block %i\n", block_ind);
+        }
+    }
+}
+
+void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
+    if (block_ind == -1) {
+        miss(block_ind, cache_set, tag);
+        cache_set->blocks[cache_set->stack->order[0]].dirty = 1;
+    } else {
+        // Set dirty bit
+        cache_set->blocks[block_ind].dirty = 1;
+        hits++;
+        if (cache_ind == 0) {
+            printf("Hit on block %i\n", block_ind);
+        }
+    }
+}
+
+void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
+    if (block_ind == -1) {
+        miss(block_ind, cache_set, tag);
+    } else {
+        // Grab value and set mru
+        lru_stack_set_mru(cache_set->stack, block_ind);
+        hits++;
+        if (cache_ind == 0) {
+            printf("Hit on block %i\n", block_ind);
+        }
+    }
+}
+
+
 /**
  * Function to perform a SINGLE memory access to your cache. In this function, 
  * you will need to update the required statistics (accesses, hits, misses, writebacks)
@@ -115,39 +183,26 @@ void cachesim_access(addr_t physical_addr, int access_type) {
     addr = addr >> num_offset_bits;
     int index = addr & index_mask;
     int tag = addr >> num_index_bits;
+
+    cache_set_t* cache_set = cache + index;
+    cache_ind = index;
+
     // Search for the tag inside the cache set
     int block_ind = -1;
     for (int i=0; i < ways; i++) {
-        if (cache[index].blocks[i].tag == tag) {
+        if (cache_set->blocks[i].tag == tag && cache_set->blocks[i].valid) {
             block_ind = i;
         }
     }
     switch(access_type) {
-        // Data read
-        case 0:
-            if (block_ind == -1) {
-                // Cache miss, grab block
-                misses++;
-            } else {
-                // Grab value and set mru
-                hits++;
-            }
+        case MEMREAD:
+            read_data_access(block_ind, cache_set, tag);
             break;
-        // Data write
-        case 1:
-            writebacks++;
-            if (block_ind != -1) {
-                // Set dirty bit
-                cache[index].blocks[block_ind].dirty = 1;
-            }
+        case MEMWRITE:
+            write_data_access(block_ind, cache_set, tag);
             break;
-        // Instruction read
-        case 2:
-            if (block_ind == -1) {
-                misses++;
-            } else {
-                hits++;
-            }
+        case IFETCH:
+            read_instr_access(block_ind, cache_set, tag);
             break;
         default:
             break;

@@ -42,10 +42,10 @@ lru_stack_t* init_lru_stack(int size) {
     //  added to lru_stack_t.
     ////////////////////////////////////////////////////////////////////
 
-    //  Initialize stack order array to -1 for each element
+    //  Initialize stack order array to an index of unique blocks
     stack->order = (int*)malloc(sizeof(int)*size);
     for (int i=0; i<size; i++) {
-        stack->order[i] = -1;
+        stack->order[i] = i;
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ void lru_stack_set_mru(lru_stack_t* stack, int n) {
     
     //  First look for n or -1 in the order array
     int search_ind = 0;
-    while((stack->order[search_ind] != n) && (stack->order[search_ind] != -1)) {
+    while((stack->order[search_ind] != n) && (search_ind < stack->size - 1)) {
         ++search_ind;
     }
     //  Move all elements before this back one
