@@ -32,7 +32,7 @@
  */
 typedef struct lru_stack_t {
 	int size;   // Corresponds to the associativity
-    // TODO: Add anything else needed to maintain a LRU Stack (ex: priority bits?). 
+    int* order;// TODO: Add anything else needed to maintain a LRU Stack (ex: priority bits?). 
 } lru_stack_t;
 
 /**

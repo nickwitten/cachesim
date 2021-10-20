@@ -33,13 +33,15 @@ int simple_log_2(int x) {
 
 //  Here are some global variables you may find useful to get you started.
 //      Feel free to add/change anyting here.
-cache_set_t cache;     // Data structure for the cache
+cache_set_t* cache;     // Data structure for the cache
 int block_size;         // Block size
 int cache_size;         // Cache size
 int ways;               // Ways
+int set_size;           // Size of data in a set
 int num_sets;           // Number of sets
 int num_offset_bits;    // Number of offset bits
 int num_index_bits;     // Number of index bits. 
+int num_tag_bits;       // Number of tag bits.
 
 /**
  * Function to intialize your cache simulator with the given cache parameters. 
@@ -63,10 +65,20 @@ void cachesim_init(int _block_size, int _cache_size, int _ways) {
     //      - Allocate any data structures you need.   
     ////////////////////////////////////////////////////////////////////
 
-    int size = (int)(cache_size / block_size);
-    cache.size = size;
-    cache.stack = init_lru_stack(size);
-    cache.blocks = (cache_block_t*)malloc(sizeof(cache_block_t)*size);
+    set_size = block_size*ways;
+    num_sets = (int)(cache_size / set_size);
+    num_offset_bits = simple_log_2(block_size);
+    num_index_bits = simple_log_2(num_sets);
+    num_tag_bits = 32 - num_offset_bits - num_index_bits;
+    cache = (cache_set_t*)malloc(num_sets*sizeof(cache_set_t));
+    for (int i=0; i < num_sets; i++) {
+        cache[i] = (struct cache_set_t){set_size};
+        cache[i].stack = init_lru_stack(ways);
+        cache[i].blocks = (cache_block_t*)malloc(sizeof(cache_block_t)*ways);
+        for (int j=0; j < ways; j++) {
+            cache[i].blocks[j] = (struct cache_block_t){0, 0, 0};
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////
     //  End of your code   
@@ -95,6 +107,52 @@ void cachesim_access(addr_t physical_addr, int access_type) {
     //      - Remember to correctly update your valid and dirty bits.  
     ////////////////////////////////////////////////////////////////////
 
+    accesses++;
+    addr_t offset_mask = (1 << num_offset_bits) - 1;
+    addr_t index_mask = (1 << num_index_bits) - 1;
+    addr_t addr = physical_addr;
+    int offset = addr & offset_mask;
+    addr = addr >> num_offset_bits;
+    int index = addr & index_mask;
+    int tag = addr >> num_index_bits;
+    // Search for the tag inside the cache set
+    int block_ind = -1;
+    for (int i=0; i < ways; i++) {
+        if (cache[index].blocks[i].tag == tag) {
+            block_ind = i;
+        }
+    }
+    switch(access_type) {
+        // Data read
+        case 0:
+            if (block_ind == -1) {
+                // Cache miss, grab block
+                misses++;
+            } else {
+                // Grab value and set mru
+                hits++;
+            }
+            break;
+        // Data write
+        case 1:
+            writebacks++;
+            if (block_ind != -1) {
+                // Set dirty bit
+                cache[index].blocks[block_ind].dirty = 1;
+            }
+            break;
+        // Instruction read
+        case 2:
+            if (block_ind == -1) {
+                misses++;
+            } else {
+                hits++;
+            }
+            break;
+        default:
+            break;
+    }
+
     ////////////////////////////////////////////////////////////////////
     //  End of your code   
     ////////////////////////////////////////////////////////////////////
@@ -108,8 +166,11 @@ void cachesim_cleanup() {
     //  TODO: Write the code to do any heap allocation cleanup
     ////////////////////////////////////////////////////////////////////
 
-    lru_stack_cleanup(cache.stack);
-    free(cache.blocks);
+    for (int i=0; i < num_sets; i++) {
+        free(cache[i].blocks);
+        lru_stack_cleanup(cache[i].stack);
+    }
+    free(cache);
 
     ////////////////////////////////////////////////////////////////////
     //  End of your code   
