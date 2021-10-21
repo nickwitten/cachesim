@@ -106,10 +106,6 @@ void miss(int block_ind, cache_set_t* cache_set, int tag) {
     }
     cache_set->blocks[lru_ind] = block;
     lru_stack_set_mru(cache_set->stack, lru_ind);
-    if (cache_ind == 0) {
-        printf("Replacing block %i\n", lru_ind);
-        printf("\n");
-    }
 }
 
 void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
@@ -119,9 +115,6 @@ void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
         // Grab value and set mru
         lru_stack_set_mru(cache_set->stack, block_ind);
         hits++;
-        if (cache_ind == 0) {
-            printf("Hit on block %i\n", block_ind);
-        }
     }
 }
 
@@ -132,10 +125,8 @@ void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
     } else {
         // Set dirty bit
         cache_set->blocks[block_ind].dirty = 1;
+        lru_stack_set_mru(cache_set->stack, block_ind);
         hits++;
-        if (cache_ind == 0) {
-            printf("Hit on block %i\n", block_ind);
-        }
     }
 }
 
@@ -146,9 +137,6 @@ void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
         // Grab value and set mru
         lru_stack_set_mru(cache_set->stack, block_ind);
         hits++;
-        if (cache_ind == 0) {
-            printf("Hit on block %i\n", block_ind);
-        }
     }
 }
 
