@@ -36,21 +36,11 @@ lru_stack_t* init_lru_stack(int size) {
     //  Set the stack size the caller passed in
 	stack->size = size;
     
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write any other code needed to initialize your LRU Stack. 
-    //  Essentially write any initializations needed for anything you
-    //  added to lru_stack_t.
-    ////////////////////////////////////////////////////////////////////
-
-    //  Initialize stack order array to an index of unique blocks
+    //  Initialize stack order array to an index of each block
     stack->order = (int*)malloc(sizeof(int)*size);
     for (int i=0; i<size; i++) {
         stack->order[i] = i;
     }
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 
 	return stack;
 }
@@ -63,14 +53,8 @@ lru_stack_t* init_lru_stack(int size) {
  * @return the index of the LRU cache block.
  */
 int lru_stack_get_lru(lru_stack_t* stack) {
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write code to get the index of the LRU block from the LRU 
-    //  Stack. 
-    ////////////////////////////////////////////////////////////////////
+    // Grab the last element of the stack
     return stack->order[stack->size-1];
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 }
 
 /**
@@ -81,12 +65,7 @@ int lru_stack_get_lru(lru_stack_t* stack) {
  * @param n the index to promote to MRU.  
  */
 void lru_stack_set_mru(lru_stack_t* stack, int n) {
-	////////////////////////////////////////////////////////////////////
-    //  TODO: Write code to set the passed in block index  as the MRU 
-    //  element in the LRU Stack. 
-    ////////////////////////////////////////////////////////////////////
-    
-    //  First look for n or -1 in the order array
+    //  First look for n in the order array
     int search_ind = 0;
     while((stack->order[search_ind] != n) && (search_ind < stack->size - 1)) {
         ++search_ind;
@@ -97,10 +76,6 @@ void lru_stack_set_mru(lru_stack_t* stack, int n) {
     }
     //  Set first element to n
     stack->order[0] = n;
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 }
 
 /**
@@ -109,15 +84,6 @@ void lru_stack_set_mru(lru_stack_t* stack, int n) {
  * @param stack the stack to free
  */
 void lru_stack_cleanup(lru_stack_t* stack) {
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write any code if you need to do additional heap allocation
-    //  cleanup
-    ////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
-
-    free(stack->order);
+    free(stack->order); // Free the order array
     free(stack);        // Free the stack struct we malloc'd
 }

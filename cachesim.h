@@ -37,6 +37,10 @@ typedef struct cache_set_t {
 } cache_set_t;
 
 void cachesim_init(int block_size, int cache_size, int ways);
+void miss(cache_set_t* cache_set, int tag);
+void read_data_access(int block_ind, cache_set_t* cache_set, int tag);
+void write_data_access(int block_ind, cache_set_t* cache_set,  int tag);
+void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag);
 void cachesim_access(addr_t physical_add, int access_type);
 void cachesim_cleanup(void);
 void cachesim_print_stats(void);

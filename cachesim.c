@@ -43,8 +43,6 @@ int num_offset_bits;    // Number of offset bits
 int num_index_bits;     // Number of index bits. 
 int num_tag_bits;       // Number of tag bits.
 
-int cache_ind;
-
 /**
  * Function to intialize your cache simulator with the given cache parameters. 
  * Note that we will only input valid parameters and all the inputs will always 
@@ -59,68 +57,79 @@ void cachesim_init(int _block_size, int _cache_size, int _ways) {
     block_size = _block_size;
     cache_size = _cache_size;
     ways = _ways;
-
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write the rest of the code needed to initialize your cache
-    //  simulator. Some of the things you may want to do are:
-    //      - Calculate any values you need such as number of index bits.
-    //      - Allocate any data structures you need.   
-    ////////////////////////////////////////////////////////////////////
-
     set_size = block_size*ways;
     num_sets = (int)(cache_size / set_size);
     num_offset_bits = simple_log_2(block_size);
     num_index_bits = simple_log_2(num_sets);
     num_tag_bits = 32 - num_offset_bits - num_index_bits;
+    // Initialize each cache set
     cache = (cache_set_t*)malloc(num_sets*sizeof(cache_set_t));
     for (int i=0; i < num_sets; i++) {
         cache[i] = (struct cache_set_t){set_size};
         cache[i].stack = init_lru_stack(ways);
+        // Initialize each block within cache set
         cache[i].blocks = (cache_block_t*)malloc(sizeof(cache_block_t)*ways);
         for (int j=0; j < ways; j++) {
             cache[i].blocks[j] = (struct cache_block_t){0, 0, 0};
         }
     }
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 }
 
-void miss(int block_ind, cache_set_t* cache_set, int tag) {
-    // Cache miss, grab block
+
+/**
+ * Function to handle cache misses. Grabs the lru
+ * block, writes back if needed, and updates it
+ * with the new block info
+ * @param cache_set is a pointer to a cache set struct
+ * @param tag is the tag of the needed data
+ */
+void miss(cache_set_t* cache_set, int tag) {
     misses++;
+    // Grab the lru block
     int lru_ind = lru_stack_get_lru(cache_set->stack);
     cache_block_t block = cache_set->blocks[lru_ind];
-    // Check if we need to writeback an lru block
+    // Check if we need to writeback the block
     if (block.dirty) {
         writebacks++;
     }
+    // Replace the block
     block.tag = tag;
     block.valid = 1;
     block.dirty = 0;
-    static int ctr = 0;
-    ctr++;
-    if (ctr == 10000) {
-        exit(1);
-    }
+    // Place the updated block in the cache
     cache_set->blocks[lru_ind] = block;
+    // Set it as the mru
     lru_stack_set_mru(cache_set->stack, lru_ind);
 }
 
+/**
+ * Function to handle a data read.
+ * @param block_ind is an integer for the index of the
+ * block that contains the needed data.  If it was not
+ * found, it will be -1.
+ * @param cache_set is a pointer to a cache set struct
+ * @param tag is the tag of the needed data
+ */
 void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
     if (block_ind == -1) {
-        miss(block_ind, cache_set, tag);
+        miss(cache_set, tag);
     } else {
-        // Grab value and set mru
         lru_stack_set_mru(cache_set->stack, block_ind);
         hits++;
     }
 }
 
+/**
+ * Function to handle a write data.
+ * @param block_ind is an integer for the index of the
+ * block that contains the needed data.  If it was not
+ * found, it will be -1.
+ * @param cache_set is a pointer to a cache set struct
+ * @param tag is the tag of the needed data
+ */
 void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
     if (block_ind == -1) {
-        miss(block_ind, cache_set, tag);
+        miss(cache_set, tag);
         cache_set->blocks[cache_set->stack->order[0]].dirty = 1;
     } else {
         // Set dirty bit
@@ -130,11 +139,18 @@ void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
     }
 }
 
+/**
+ * Function to handle a read instruction.
+ * @param block_ind is an integer for the index of the
+ * block that contains the needed data.  If it was not
+ * found, it will be -1.
+ * @param cache_set is a pointer to a cache set struct
+ * @param tag is the tag of the needed data
+ */
 void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
     if (block_ind == -1) {
-        miss(block_ind, cache_set, tag);
+        miss(cache_set, tag);
     } else {
-        // Grab value and set mru
         lru_stack_set_mru(cache_set->stack, block_ind);
         hits++;
     }
@@ -152,18 +168,8 @@ void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
  *      to reflect these values in cachesim.h so you can make your code more readable.
  */
 void cachesim_access(addr_t physical_addr, int access_type) {
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write the code needed to perform a cache access on your
-    //  cache simulator. Some things to remember:
-    //      - When it is a cache hit, you SHOULD NOT bring another cache 
-    //        block in.
-    //      - When it is a cache miss, you should bring a new cache block
-    //        in. If the set is full, evict the LRU block.
-    //      - Remember to update all the necessary statistics as necessary
-    //      - Remember to correctly update your valid and dirty bits.  
-    ////////////////////////////////////////////////////////////////////
-
-    accesses++;
+    accesses++;  // Increment stat
+    // Parse the address into tag, index, and offset
     addr_t offset_mask = (1 << num_offset_bits) - 1;
     addr_t index_mask = (1 << num_index_bits) - 1;
     addr_t addr = physical_addr;
@@ -172,16 +178,17 @@ void cachesim_access(addr_t physical_addr, int access_type) {
     int index = addr & index_mask;
     int tag = addr >> num_index_bits;
 
+    // Compute the pointer to the needed cache set
     cache_set_t* cache_set = cache + index;
-    cache_ind = index;
 
-    // Search for the tag inside the cache set
+    // Search for the tag inside the cache set, will remain -1 if not found
     int block_ind = -1;
     for (int i=0; i < ways; i++) {
         if (cache_set->blocks[i].tag == tag && cache_set->blocks[i].valid) {
             block_ind = i;
         }
     }
+    // Dispatch into different actions based on access type
     switch(access_type) {
         case MEMREAD:
             read_data_access(block_ind, cache_set, tag);
@@ -195,29 +202,19 @@ void cachesim_access(addr_t physical_addr, int access_type) {
         default:
             break;
     }
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 }
 
 /**
  * Function to free up any dynamically allocated memory you allocated
  */
 void cachesim_cleanup() {
-    ////////////////////////////////////////////////////////////////////
-    //  TODO: Write the code to do any heap allocation cleanup
-    ////////////////////////////////////////////////////////////////////
-
+    // Free all blocks and stacks for each cache set
     for (int i=0; i < num_sets; i++) {
         free(cache[i].blocks);
         lru_stack_cleanup(cache[i].stack);
     }
+    // Free the array of cache sets
     free(cache);
-
-    ////////////////////////////////////////////////////////////////////
-    //  End of your code   
-    ////////////////////////////////////////////////////////////////////
 }
 
 /**
