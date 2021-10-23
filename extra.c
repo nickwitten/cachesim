@@ -10,8 +10,19 @@
 
 // Statistics you will need to keep track. DO NOT CHANGE THESE.
 counter_t accesses = 0;     // Total number of cache accesses
-counter_t hits = 0;         // Total number of cache hits
-counter_t misses = 0;       // Total number of cache misses
+counter_t g_misses_i = 0;       // Total number of cache misses
+counter_t g_misses_d = 0;       // Total number of cache misses
+counter_t g_hits_i = 0;       // Total number of cache misses
+counter_t g_hits_d = 0;       // Total number of cache misses
+counter_t l1_misses_i = 0;
+counter_t l1_misses_d = 0;
+counter_t l1_hits_i = 0;
+counter_t l1_hits_d = 0;
+counter_t l2_misses_i = 0;
+counter_t l2_misses_d = 0;
+counter_t l2_hits_i = 0;
+counter_t l2_hits_d = 0;
+counter_t traffic = 0;
 counter_t writebacks = 0;   // Total number of writebacks
 
 /**
@@ -37,18 +48,18 @@ cache_set_t* l1_cache_i;     // Data structure for the cache
 cache_set_t* l1_cache_d;     // Data structure for the cache
 cache_set_t* l2_cache;     // Data structure for the cache
 int block_size = 64;         // Block size
-int l1_cache_size = 16*1024 // Cache size
-int l1_num_sets = l1_cache_size / block_size;
-int l1_num_offset_bits = simple_log_2(block_size);
-int l1_num_index_bits = simple_log_2(l1_cache_size / block_size);     // Number of index bits. 
-int l2_cache_size = 256*1024
+int l1_cache_size = 16*1024; // Cache size
+int l1_num_sets;
+int l1_num_offset_bits;
+int l1_num_index_bits;
+int l2_cache_size = 256*1024;
 int l2_ways;               // Ways
 int l2_num_sets;           // Number of sets
-int l2_num_offset_bits = simple_log_2(block_size);    // Number of offset bits
+int l2_num_offset_bits;
 int l2_num_index_bits;     // Number of index bits. 
 
-cache_set_t* cache_init(int num_sets, int ways) {
-    cache = (cache_set_t*)malloc(l2_num_sets*sizeof(cache_set_t));
+cache_set_t* init_cache(int num_sets, int ways) {
+    cache_set_t* cache = (cache_set_t*)malloc(num_sets*sizeof(cache_set_t));
     for (int i=0; i < num_sets; i++) {
         cache[i] = (struct cache_set_t){ways};
         cache[i].stack = init_lru_stack(ways);
@@ -58,8 +69,9 @@ cache_set_t* cache_init(int num_sets, int ways) {
             cache[i].blocks[j] = (struct cache_block_t){0, 0, 0};
         }
     }
-    return cache
+    return cache;
 }
+
 
 /**
  * Function to intialize your cache simulator with the given cache parameters. 
@@ -71,19 +83,49 @@ cache_set_t* cache_init(int num_sets, int ways) {
  * @param _ways is the associativity
  */
 void cachesim_init(int _block_size, int _cache_size, int _ways) {
-    // Set cache parameters to global variables
+    // Set l1 cache parameters
+    l1_num_sets = l1_cache_size / block_size;
+    l1_num_offset_bits = simple_log_2(block_size);
+    l1_num_index_bits = simple_log_2(l1_num_sets);     // Number of index bits. 
+
+    // Initialize l1 caches
+    l1_cache_i = init_cache(l1_num_sets, 1);
+    l1_cache_d = init_cache(l1_num_sets, 1);
+
+    // Set l2 cache parameters
     l2_ways = _ways;
     int l2_set_size = block_size*l2_ways;
     l2_num_sets = (int)(l2_cache_size / l2_set_size);
     l2_num_offset_bits = simple_log_2(block_size);
     l2_num_index_bits = simple_log_2(l2_num_sets);
 
-    // Initialize l1 caches
-    l1_cache_i = init_cache(l1_num_sets, 1);
-    l1_cache_d = init_cache(l1_num_sets, 1);
+    // Initialize l2 cache
     l2_cache = init_cache(l2_num_sets, l2_ways);
 }
 
+
+int search_cache(cache_set_t* cache_set, const addr_id_t* id) {
+    // Search for the tag inside the cache set, will remain -1 if not found
+    int block_ind = -1;
+    for (int i=0; i < cache_set->size; i++) {
+        if (cache_set->blocks[i].tag == id->tag && cache_set->blocks[i].valid) {
+            block_ind = i;
+        }
+    }
+    return block_ind;
+}
+
+addr_id_t parse_addr(addr_t addr, int num_offset_bits, int num_index_bits) {
+    // Parse the address into tag, index, and offset
+    addr_id_t id;
+    addr_t offset_mask = (1 << num_offset_bits) - 1;
+    addr_t index_mask = (1 << num_index_bits) - 1;
+    id.offset = addr & offset_mask;
+    addr = addr >> num_offset_bits;
+    id.index = addr & index_mask;
+    id.tag = addr >> num_index_bits;
+    return id;
+}
 
 /**
  * Function to handle cache misses. Grabs the lru
@@ -92,23 +134,38 @@ void cachesim_init(int _block_size, int _cache_size, int _ways) {
  * @param cache_set is a pointer to a cache set struct
  * @param tag is the tag of the needed data
  */
-void miss(cache_set_t* cache_set, int tag) {
-    misses++;
+int replace(cache_set_t* cache_set, const addr_id_t* addr_id) {
     // Grab the lru block
     int lru_ind = lru_stack_get_lru(cache_set->stack);
     cache_block_t block = cache_set->blocks[lru_ind];
-    // Check if we need to writeback the block
+    // Check if we need to writeback the block.  Blocks in l2 shouldn't ever be dirty.
     if (block.dirty) {
         writebacks++;
     }
     // Replace the block
-    block.tag = tag;
+    int old_tag = block.tag;
+    block.tag = addr_id->tag;
     block.valid = 1;
     block.dirty = 0;
     // Place the updated block in the cache
     cache_set->blocks[lru_ind] = block;
     // Set it as the mru
     lru_stack_set_mru(cache_set->stack, lru_ind);
+    return old_tag;
+}
+
+int l2_replace(cache_set_t* l2_set, const addr_id_t* l2_addr_id) {
+    int evicted_tag = replace(l2_set, l2_addr_id);
+    int evicted_index = l2_addr_id->index;
+    addr_t evicted_address = evicted_tag << (l2_num_offset_bits + l2_num_index_bits);
+    evicted_address |= evicted_index << l2_num_offset_bits;
+    addr_id_t l1_id = parse_addr(evicted_address, l1_num_offset_bits, l1_num_index_bits);
+    if (l1_cache_d[l1_id.index].blocks[0].tag == l1_id.tag) {
+        l1_cache_d[l1_id.index].blocks[0].valid = 0;
+    }
+    if (l1_cache_i[l1_id.index].blocks[0].tag == l1_id.tag) {
+        l1_cache_i[l1_id.index].blocks[0].valid = 0;
+    }
 }
 
 /**
@@ -119,12 +176,32 @@ void miss(cache_set_t* cache_set, int tag) {
  * @param cache_set is a pointer to a cache set struct
  * @param tag is the tag of the needed data
  */
-void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
-    if (block_ind == -1) {
-        miss(cache_set, tag);
+void read_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) {
+    cache_set_t* l1_set = l1_cache_d + l1_addr_id->index;
+    cache_set_t* l2_set = l2_cache + l2_addr_id->index;
+    int l1_block_ind = search_cache(l1_set, l1_addr_id);
+    if (l1_block_ind == -1) {
+        l1_misses_d++;
+        int l2_block_ind = search_cache(l2_set, l2_addr_id);
+        if (l2_block_ind == -1) {
+            // Both missed
+            l2_misses_d++;
+            g_misses_d++;
+            replace(l1_set, l1_addr_id);
+            l2_replace(l2_set, l2_addr_id);
+        } else {
+            // l2 hit
+            replace(l1_set, l1_addr_id);
+            lru_stack_set_mru(l2_set->stack, l2_block_ind);
+            traffic++;
+            g_hits_d++;
+            l2_hits_d++;
+        }
     } else {
-        lru_stack_set_mru(cache_set->stack, block_ind);
-        hits++;
+        // l1 hit
+        lru_stack_set_mru(l1_set->stack, l1_block_ind);
+        g_hits_d++;
+        l1_hits_d++;
     }
 }
 
@@ -136,16 +213,42 @@ void read_data_access(int block_ind, cache_set_t* cache_set, int tag) {
  * @param cache_set is a pointer to a cache set struct
  * @param tag is the tag of the needed data
  */
-void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
-    if (block_ind == -1) {
-        miss(cache_set, tag);
-        cache_set->blocks[cache_set->stack->order[0]].dirty = 1;
+void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) {
+    cache_set_t* l1_set = l1_cache_d + l1_addr_id->index;
+    cache_set_t* l2_set = l2_cache + l2_addr_id->index;
+    int l1_block_ind = search_cache(l1_set, l1_addr_id);
+    if (l1_block_ind == -1) {
+        l1_misses_d++;
+        int l2_block_ind = search_cache(l2_set, l2_addr_id);
+        if (l2_block_ind == -1) {
+            // Both missed
+            l2_misses_d++;
+            g_misses_d++;
+            replace(l1_set, l1_addr_id);
+            replace(l2_set, l2_addr_id);
+        } else {
+            // l2 hit
+            replace(l1_set, l1_addr_id);
+            lru_stack_set_mru(l2_set->stack, l2_block_ind);
+            traffic++;
+            g_hits_d++;
+            l2_hits_d++;
+        }
     } else {
-        // Set dirty bit
-        cache_set->blocks[block_ind].dirty = 1;
-        lru_stack_set_mru(cache_set->stack, block_ind);
-        hits++;
+        // l1 hit
+        lru_stack_set_mru(l1_set->stack, l1_block_ind);
+        g_hits_d++;
+        l1_hits_d++;
     }
+//     if (block_ind == -1) {
+//         miss(cache_set, tag);
+//         cache_set->blocks[cache_set->stack->order[0]].dirty = 1;
+//     } else {
+//         // Set dirty bit
+//         cache_set->blocks[block_ind].dirty = 1;
+//         lru_stack_set_mru(cache_set->stack, block_ind);
+//         hits++;
+//     }
 }
 
 /**
@@ -156,15 +259,15 @@ void write_data_access(int block_ind, cache_set_t* cache_set,  int tag) {
  * @param cache_set is a pointer to a cache set struct
  * @param tag is the tag of the needed data
  */
-void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
-    if (block_ind == -1) {
-        miss(cache_set, tag);
-    } else {
-        lru_stack_set_mru(cache_set->stack, block_ind);
-        hits++;
-    }
+void read_instr_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) {
+    int x;
+//     if (block_ind == -1) {
+//         miss(cache_set, tag);
+//     } else {
+//         lru_stack_set_mru(cache_set->stack, block_ind);
+//         hits++;
+//     }
 }
-
 
 /**
  * Function to perform a SINGLE memory access to your cache. In this function, 
@@ -178,44 +281,29 @@ void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag) {
  */
 void cachesim_access(addr_t physical_addr, int access_type) {
     accesses++;  // Increment stat
-    // Parse the address into tag, index, and offset
-    addr_t offset_mask = (1 << num_offset_bits) - 1;
-    addr_t index_mask = (1 << num_index_bits) - 1;
-    addr_t addr = physical_addr;
-    int offset = addr & offset_mask;
-    addr = addr >> num_offset_bits;
-    int index = addr & index_mask;
-    int tag = addr >> num_index_bits;
+    // Parse address for both levels of cache
+    addr_id_t l1_addr_id = parse_addr(physical_addr, l1_num_offset_bits, l1_num_index_bits);
+    addr_id_t l2_addr_id = parse_addr(physical_addr, l2_num_offset_bits, l2_num_index_bits);
 
-    // Compute the pointer to the needed cache set
-    cache_set_t* cache_set = cache + index;
-
-    // Search for the tag inside the cache set, will remain -1 if not found
-    int block_ind = -1;
-    for (int i=0; i < ways; i++) {
-        if (cache_set->blocks[i].tag == tag && cache_set->blocks[i].valid) {
-            block_ind = i;
-        }
-    }
     // Dispatch into different actions based on access type
     switch(access_type) {
         case MEMREAD:
-            read_data_access(block_ind, cache_set, tag);
+            read_data_access(&l1_addr_id, &l2_addr_id);
             break;
         case MEMWRITE:
-            write_data_access(block_ind, cache_set, tag);
+            write_data_access(&l1_addr_id, &l2_addr_id);
             break;
         case IFETCH:
-            read_instr_access(block_ind, cache_set, tag);
+            read_instr_access(&l1_addr_id, &l2_addr_id);
             break;
         default:
             break;
     }
 }
 
-void clean_cache(cache_set_t* cache, int num_sets) {
+void free_cache(cache_set_t* cache, int num_sets) {
     // Free all blocks and stacks for each cache set
-    for (int i=0; i < l2_num_sets; i++) {
+    for (int i=0; i < num_sets; i++) {
         free(cache[i].blocks);
         lru_stack_cleanup(cache[i].stack);
     }
@@ -227,9 +315,9 @@ void clean_cache(cache_set_t* cache, int num_sets) {
  * Function to free up any dynamically allocated memory you allocated
  */
 void cachesim_cleanup() {
-    clean_cache(l1_cache_i, l1_num_sets);
-    clean_cache(l1_cache_d, l1_num_sets);
-    clean_cache(l2_cache, l2_num_sets);
+    free_cache(l1_cache_i, l1_num_sets);
+    free_cache(l1_cache_d, l1_num_sets);
+    free_cache(l2_cache, l2_num_sets);
 }
 
 /**
@@ -237,6 +325,8 @@ void cachesim_cleanup() {
  * DO NOT update what this prints.
  */
 void cachesim_print_stats() {
+    long long unsigned misses = g_misses_i + g_misses_d;
+    long long unsigned hits = g_hits_i + g_hits_d;
     printf("%llu, %llu, %llu, %llu\n", accesses, hits, misses, writebacks);  
 }
 

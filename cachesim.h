@@ -36,11 +36,19 @@ typedef struct cache_set_t {
 							//	per set. 
 } cache_set_t;
 
+typedef struct addr_id_t {
+    int tag;
+    int index;
+    int offset;
+} addr_id_t;
+
+
 void cachesim_init(int block_size, int cache_size, int ways);
-void miss(cache_set_t* cache_set, int tag);
-void read_data_access(int block_ind, cache_set_t* cache_set, int tag);
-void write_data_access(int block_ind, cache_set_t* cache_set,  int tag);
-void read_instr_access(int block_ind, cache_set_t* cache_set,  int tag);
+void l2_miss(cache_set_t* cache_set, int tag);
+int search_cache(cache_set_t* cache, const addr_id_t* id);
+void read_data_access();
+void write_data_access();
+void read_instr_access();
 void cachesim_access(addr_t physical_add, int access_type);
 void cachesim_cleanup(void);
 void cachesim_print_stats(void);
