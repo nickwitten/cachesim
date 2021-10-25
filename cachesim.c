@@ -171,7 +171,7 @@ void l1_replace(cache_set_t* l1_set, const addr_id_t* l1_addr_id) {
         if (block.tag == l2_id.tag && block.valid) {
             l2_cache[l2_id.index].blocks[i].dirty = 1;
             traffic++;
-            printf("Traffic Now\n");
+            //printf("Traffic Now\n");
         }
     }
 }
@@ -186,29 +186,29 @@ void l2_replace(cache_set_t* l2_set, const addr_id_t* l2_addr_id) {
     if (evicted_block.dirty) {
         writebacks++;
     }
-    printf("L2 Data Evicted, Index: %i, Tag: %i\n", l2_addr_id->index, evicted_block.tag);
+    //printf("L2 Data Evicted, Index: %i, Tag: %i\n", l2_addr_id->index, evicted_block.tag);
     // Check if its in L1 cache
     int evicted_index = l2_addr_id->index;
     addr_t evicted_address = evicted_block.tag << (l2_num_offset_bits + l2_num_index_bits);
     evicted_address |= evicted_index << l2_num_offset_bits;
     addr_id_t l1_id = parse_addr(evicted_address, l1_num_offset_bits, l1_num_index_bits);
-    printf("Searching for L1 Data, Index: %i, Tag: %i\n", l1_id.index, l1_id.tag);
+    //printf("Searching for L1 Data, Index: %i, Tag: %i\n", l1_id.index, l1_id.tag);
     if (l1_cache_d[l1_id.index].blocks[0].tag == l1_id.tag && l1_cache_d[l1_id.index].blocks[0].valid) {
-        printf("Back invalidation\n");
+        //printf("Back invalidation\n");
         if (l1_cache_d[l1_id.index].blocks[0].dirty == 1) {
             writebacks++;
         }
         l1_cache_d[l1_id.index].blocks[0].valid = 0;
-        printf("Traffic Now\n");
+        //printf("Traffic Now\n");
         traffic++;
     }
     if (l1_cache_i[l1_id.index].blocks[0].tag == l1_id.tag && l1_cache_i[l1_id.index].blocks[0].valid) {
-        printf("Back invalidation\n");
+        //printf("Back invalidation\n");
         if (l1_cache_i[l1_id.index].blocks[0].dirty == 1) {
             writebacks++;
         }
         l1_cache_i[l1_id.index].blocks[0].valid = 0;
-        printf("Traffic Now\n");
+        //printf("Traffic Now\n");
         traffic++;
     }
 }
@@ -228,25 +228,25 @@ void read_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) 
     if (l1_block_ind == -1) {
         int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
-            printf("L1 and L2 missed\n");
+            //printf("L1 and L2 missed\n");
             // Both missed
             l1_replace(l1_set, l1_addr_id);
             l2_replace(l2_set, l2_addr_id);
             l2_misses_d++;
             g_misses_d++;
         } else {
-            printf("L2 hit\n");
+            //printf("L2 hit\n");
             // l2 hit
             l1_replace(l1_set, l1_addr_id);
             lru_stack_set_mru(l2_set->stack, l2_block_ind);
-            printf("Traffic Now\n");
+            //printf("Traffic Now\n");
             traffic++;
             g_hits_d++;
             l2_hits_d++;
         }
         l1_misses_d++;
     } else {
-        printf("L1 hit\n");
+        //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
         g_hits_d++;
@@ -269,7 +269,7 @@ void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
     if (l1_block_ind == -1) {
         int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
-            printf("L1 and L2 missed\n");
+            //printf("L1 and L2 missed\n");
             // Both missed
             l1_replace(l1_set, l1_addr_id);
             l2_replace(l2_set, l2_addr_id);
@@ -277,19 +277,19 @@ void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
             l2_misses_d++;
             g_misses_d++;
         } else {
-            printf("L2 hit\n");
+            //printf("L2 hit\n");
             // l2 hit
             l1_replace(l1_set, l1_addr_id);
             l1_set->blocks[l1_set->stack->order[0]].dirty = 1;
             lru_stack_set_mru(l2_set->stack, l2_block_ind);
-            printf("Traffic Now\n");
+            //printf("Traffic Now\n");
             traffic++;
             g_hits_d++;
             l2_hits_d++;
         }
         l1_misses_d++;
     } else {
-        printf("L1 hit\n");
+        //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
         l1_set->blocks[l1_set->stack->order[0]].dirty = 1;
@@ -313,25 +313,25 @@ void read_instr_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
     if (l1_block_ind == -1) {
         int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
-            printf("L1 and L2 missed\n");
+            //printf("L1 and L2 missed\n");
             // Both missed
             l1_replace(l1_set, l1_addr_id);
             l2_replace(l2_set, l2_addr_id);
             l2_misses_i++;
             g_misses_i++;
         } else {
-            printf("L2 hit\n");
+            //printf("L2 hit\n");
             // l2 hit
             l1_replace(l1_set, l1_addr_id);
             lru_stack_set_mru(l2_set->stack, l2_block_ind);
-            printf("Traffic Now\n");
+            //printf("Traffic Now\n");
             traffic++;
             g_hits_i++;
             l2_hits_i++;
         }
         l1_misses_i++;
     } else {
-        printf("L1 hit\n");
+        //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
         g_hits_i++;
@@ -354,8 +354,8 @@ void cachesim_access(addr_t physical_addr, int access_type) {
     // Parse address for both levels of cache
     addr_id_t l1_addr_id = parse_addr(physical_addr, l1_num_offset_bits, l1_num_index_bits);
     addr_id_t l2_addr_id = parse_addr(physical_addr, l2_num_offset_bits, l2_num_index_bits);
-    printf("l1 index: %i, l1 tag: %i\n", l1_addr_id.index, l1_addr_id.tag);
-    printf("l2 index: %i, l2 tag: %i\n", l2_addr_id.index, l2_addr_id.tag);
+    //printf("l1 index: %i, l1 tag: %i\n", l1_addr_id.index, l1_addr_id.tag);
+    //printf("l2 index: %i, l2 tag: %i\n", l2_addr_id.index, l2_addr_id.tag);
 
     // Dispatch into different actions based on access type
     switch(access_type) {
@@ -371,7 +371,7 @@ void cachesim_access(addr_t physical_addr, int access_type) {
         default:
             break;
     }
-    printf("\n\n");
+    //printf("\n\n");
 }
 
 void free_cache(cache_set_t* cache, int num_sets) {
