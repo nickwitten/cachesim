@@ -42,8 +42,29 @@ typedef struct addr_id_t {
     int offset;
 } addr_id_t;
 
+/*
+ * Global stats variables
+ */
+counter_t accesses;     // Total number of cache accesses
+counter_t traffic;
+counter_t writebacks;   // Total number of writebacks
+counter_t g_misses_i;       // Total number of cache misses
+counter_t g_misses_d;       // Total number of cache misses
+counter_t g_hits_i;       // Total number of cache misses
+counter_t g_hits_d;       // Total number of cache misses
+counter_t l1_misses_i;
+counter_t l1_misses_d;
+counter_t l1_hits_i;
+counter_t l1_hits_d;
+counter_t l2_misses_i;
+counter_t l2_misses_d;
+counter_t l2_hits_i;
+counter_t l2_hits_d;
+
 
 void cachesim_init(int block_size, int cache_size, int ways);
+FILE *open_trace(const char *filename);
+int next_line(FILE* trace);
 void l2_miss(cache_set_t* cache_set, int tag);
 int search_cache(cache_set_t* cache, const addr_id_t* id);
 void read_data_access();
