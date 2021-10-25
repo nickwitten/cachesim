@@ -45,13 +45,14 @@ typedef struct addr_id_t {
 /*
  * Global stats variables
  */
-counter_t accesses;     // Total number of cache accesses
-counter_t traffic;
-counter_t writebacks;   // Total number of writebacks
-counter_t g_misses_i;       // Total number of cache misses
-counter_t g_misses_d;       // Total number of cache misses
-counter_t g_hits_i;       // Total number of cache misses
-counter_t g_hits_d;       // Total number of cache misses
+counter_t accesses;     
+counter_t traffic_i;
+counter_t traffic_d;
+counter_t writebacks;   
+counter_t g_misses_i;   
+counter_t g_misses_d;   
+counter_t g_hits_i;     
+counter_t g_hits_d;     
 counter_t l1_misses_i;
 counter_t l1_misses_d;
 counter_t l1_hits_i;
@@ -62,16 +63,22 @@ counter_t l2_hits_i;
 counter_t l2_hits_d;
 
 
+int simple_log_2(int x);
+cache_set_t* init_cache(int num_sets, int ways);
 void cachesim_init(int block_size, int cache_size, int ways);
-FILE *open_trace(const char *filename);
-int next_line(FILE* trace);
-void l2_miss(cache_set_t* cache_set, int tag);
-int search_cache(cache_set_t* cache, const addr_id_t* id);
-void read_data_access();
-void write_data_access();
-void read_instr_access();
+int search_cache(cache_set_t* cache_set, const addr_id_t* id);
+addr_id_t parse_addr(addr_t addr, int num_offset_bits, int num_index_bits);
+void replace(cache_set_t* cache_set, const addr_id_t* addr_id, cache_block_t* evicted_block);
+void l1_replace(cache_set_t* l1_set, const addr_id_t* l1_addr_id, int data);
+void l2_replace(cache_set_t* l2_set, const addr_id_t* l2_addr_id);
+void read_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id);
+void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id);
+void read_instr_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id);
 void cachesim_access(addr_t physical_add, int access_type);
+void free_cache(cache_set_t* cache, int num_sets);
 void cachesim_cleanup(void);
 void cachesim_print_stats(void);
+FILE *open_trace(const char *filename);
+int next_line(FILE* trace);
 
 #endif
