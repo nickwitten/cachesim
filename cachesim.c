@@ -262,8 +262,8 @@ void read_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) 
     cache_set_t* l1_set = l1_cache_d + l1_addr_id->index;
     cache_set_t* l2_set = l2_cache + l2_addr_id->index;
     int l1_block_ind = search_cache(l1_set, l1_addr_id);
+    int l2_block_ind = search_cache(l2_set, l2_addr_id);
     if (l1_block_ind == -1) {
-        int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
             //printf("L1 and L2 missed\n");
             // Both missed
@@ -286,6 +286,10 @@ void read_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id) 
         //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
+        // Update L2 LRU so that L1 doesn't recieve an
+        // invalidation for this block later even if it's
+        // used frequently.
+        lru_stack_set_mru(l2_set->stack, l2_block_ind);
         g_hits_d++;
         l1_hits_d++;
     }
@@ -300,8 +304,8 @@ void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
     cache_set_t* l1_set = l1_cache_d + l1_addr_id->index;
     cache_set_t* l2_set = l2_cache + l2_addr_id->index;
     int l1_block_ind = search_cache(l1_set, l1_addr_id);
+    int l2_block_ind = search_cache(l2_set, l2_addr_id);
     if (l1_block_ind == -1) {
-        int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
             //printf("L1 and L2 missed\n");
             // Both missed
@@ -326,6 +330,10 @@ void write_data_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
         //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
+        // Update L2 LRU so that L1 doesn't recieve an
+        // invalidation for this block later even if it's
+        // used frequently.
+        lru_stack_set_mru(l2_set->stack, l2_block_ind);
         l1_set->blocks[l1_set->stack->order[0]].dirty = 1;
         g_hits_d++;
         l1_hits_d++;
@@ -341,8 +349,8 @@ void read_instr_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
     cache_set_t* l1_set = l1_cache_i + l1_addr_id->index;
     cache_set_t* l2_set = l2_cache + l2_addr_id->index;
     int l1_block_ind = search_cache(l1_set, l1_addr_id);
+    int l2_block_ind = search_cache(l2_set, l2_addr_id);
     if (l1_block_ind == -1) {
-        int l2_block_ind = search_cache(l2_set, l2_addr_id);
         if (l2_block_ind == -1) {
             //printf("L1 and L2 missed\n");
             // Both missed
@@ -365,6 +373,10 @@ void read_instr_access(const addr_id_t* l1_addr_id, const addr_id_t* l2_addr_id)
         //printf("L1 hit\n");
         // l1 hit
         lru_stack_set_mru(l1_set->stack, l1_block_ind);
+        // Update L2 LRU so that L1 doesn't recieve an
+        // invalidation for this block later even if it's
+        // used frequently.
+        lru_stack_set_mru(l2_set->stack, l2_block_ind);
         g_hits_i++;
         l1_hits_i++;
     }
@@ -430,7 +442,7 @@ void cachesim_cleanup() {
 }
 
 /*
- * Function to comput missrates for global and local data and instruction rates.
+ * Function to compute and print global and local missrates for data and instructions.
  * As well as traffic for Data.
  */
 void data_insights() {
@@ -457,7 +469,6 @@ void cachesim_print_stats() {
     long long unsigned misses = g_misses_i + g_misses_d;
     long long unsigned hits = g_hits_i + g_hits_d;
     printf("%llu, %llu, %llu, %llu\n", accesses, hits, misses, writebacks);  
-    data_insights();
 }
 
 /**
@@ -505,6 +516,7 @@ int main(int argc, char **argv) {
     cachesim_init(atol(argv[2]), atol(argv[3]), atol(argv[4]));
     while (next_line(input));
     cachesim_print_stats();
+    data_insights();
     cachesim_cleanup();
     fclose(input);
     return 0;
