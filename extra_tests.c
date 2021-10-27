@@ -51,7 +51,7 @@ void reset() {
 void test1() {
     printf("------- L1 Hits  -------\n");
     FILE *input;
-    input = open_trace("./Traces/extra_test1.txt");
+    input = open_trace("trace_extra1.txt");
     cachesim_init(64, 262144, 8);
     while (next_line(input));
     cachesim_cleanup();
@@ -85,7 +85,7 @@ void test1() {
 void test2() {
     printf("\n------- L2 Hits  -----\n");
     FILE *input;
-    input = open_trace("./Traces/extra_test2.txt");
+    input = open_trace("trace_extra2.txt");
     cachesim_init(64, 262144, 8);
     while (next_line(input));
     cachesim_cleanup();
@@ -121,7 +121,7 @@ void test2() {
 void test3() {
     printf("------- L1 Write, L1 Evict, L2 Evict and Writeback --------\n");
     FILE *input;
-    input = open_trace("./Traces/extra_test3.txt");
+    input = open_trace("trace_extra3.txt");
     cachesim_init(64, 262144, 8);
     while (next_line(input));
     cachesim_cleanup();
@@ -156,7 +156,7 @@ void test3() {
 void test4() {
     printf("------- L1 I Type, Invalidation Due to Data Filling L2 Set --------\n");
     FILE *input;
-    input = open_trace("./Traces/extra_test4.txt");
+    input = open_trace("trace_extra4.txt");
     cachesim_init(64, 262144, 8);
     while (next_line(input));
     cachesim_cleanup();
@@ -193,7 +193,7 @@ void test4() {
 void test5() {
     printf("------- L1 Write, Eviction from L2 and Invalidation Writeback --------\n");
     FILE *input;
-    input = open_trace("./Traces/extra_test5.txt");
+    input = open_trace("trace_extra5.txt");
     cachesim_init(64, 65536, 8);
     while (next_line(input));
     cachesim_cleanup();
