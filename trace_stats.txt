@@ -1,0 +1,29 @@
+Trace Stats with an 8 Way L2 Cache
+
+trace.gcc.txt
+Global Data Missrate: 0.007261
+Global Instruction Missrate: 0.001097
+L1 Data Missrate: 0.031671
+L1 Instruction Missrate: 0.029971
+L2 Data Missrate: 0.229271
+L2 Instruction Missrate: 0.036596
+Traffic for D-Cache: 8265
+
+trace.merge.txt
+Global Data Missrate: 0.006330
+Global Instruction Missrate: 0.002937
+L1 Data Missrate: 0.029496
+L1 Instruction Missrate: 0.008362
+L2 Data Missrate: 0.214610
+L2 Instruction Missrate: 0.351186
+Traffic for D-Cache: 15783
+
+trace.random64k.txt
+Global Data Missrate: 0.003906
+Global Instruction Missrate: N/a
+L1 Data Missrate: 0.750877
+L1 Instruction Missrate: N/a
+L2 Data Missrate: 0.005202
+L2 Instruction Missrate: N/a
+Traffic for D-Cache: 195814
+

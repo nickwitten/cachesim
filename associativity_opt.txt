@@ -1,0 +1,923 @@
+Lowest Missrates:
+[Trace] - [Associativity]
+
+trace.gcc.txt - 14
+Global Data Missrate: 0.007257
+
+trace.merge.txt - 64
+Global Data Missrate: 0.006181
+
+trace.random64k.txt - 1
+Global Data Missrate: 0.003906
+
+
+Overall - 64 ways minimized
+the missrate.
+
+
+
+------------------------------
+
+trace.gcc.txt - 1
+Global Data Missrate: 0.016944
+
+trace.gcc.txt - 2
+Global Data Missrate: 0.008309
+
+trace.gcc.txt - 3
+Global Data Missrate: 0.007542
+
+trace.gcc.txt - 4
+Global Data Missrate: 0.007270
+
+trace.gcc.txt - 5
+Global Data Missrate: 0.007470
+
+trace.gcc.txt - 6
+Global Data Missrate: 0.007334
+
+trace.gcc.txt - 7
+Global Data Missrate: 0.007279
+
+trace.gcc.txt - 8
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 9
+Global Data Missrate: 0.007325
+
+trace.gcc.txt - 10
+Global Data Missrate: 0.007284
+
+trace.gcc.txt - 11
+Global Data Missrate: 0.007270
+
+trace.gcc.txt - 12
+Global Data Missrate: 0.007266
+
+trace.gcc.txt - 13
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 14
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 15
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 16
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 17
+Global Data Missrate: 0.007279
+
+trace.gcc.txt - 18
+Global Data Missrate: 0.007275
+
+trace.gcc.txt - 19
+Global Data Missrate: 0.007266
+
+trace.gcc.txt - 20
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 21
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 22
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 23
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 24
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 25
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 26
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 27
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 28
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 29
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 30
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 31
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 32
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 33
+Global Data Missrate: 0.007279
+
+trace.gcc.txt - 34
+Global Data Missrate: 0.007275
+
+trace.gcc.txt - 35
+Global Data Missrate: 0.007266
+
+trace.gcc.txt - 36
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 37
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 38
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 39
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 40
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 41
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 42
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 43
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 44
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 45
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 46
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 47
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 48
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 49
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 50
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 51
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 52
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 53
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 54
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 55
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 56
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 57
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 58
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 59
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 60
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 61
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 62
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 63
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 64
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 65
+Global Data Missrate: 0.007275
+
+trace.gcc.txt - 66
+Global Data Missrate: 0.007275
+
+trace.gcc.txt - 67
+Global Data Missrate: 0.007275
+
+trace.gcc.txt - 68
+Global Data Missrate: 0.007270
+
+trace.gcc.txt - 69
+Global Data Missrate: 0.007266
+
+trace.gcc.txt - 70
+Global Data Missrate: 0.007261
+
+trace.gcc.txt - 71
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 72
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 73
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 74
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 75
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 76
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 77
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 78
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 79
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 80
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 81
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 82
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 83
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 84
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 85
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 86
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 87
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 88
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 89
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 90
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 91
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 92
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 93
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 94
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 95
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 96
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 97
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 98
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 99
+Global Data Missrate: 0.007257
+
+trace.gcc.txt - 100
+Global Data Missrate: 0.007257
+
+
+trace.merge.txt - 1
+Global Data Missrate: 0.007835
+
+trace.merge.txt - 2
+Global Data Missrate: 0.006697
+
+trace.merge.txt - 3
+Global Data Missrate: 0.006851
+
+trace.merge.txt - 4
+Global Data Missrate: 0.006506
+
+trace.merge.txt - 5
+Global Data Missrate: 0.007034
+
+trace.merge.txt - 6
+Global Data Missrate: 0.006695
+
+trace.merge.txt - 7
+Global Data Missrate: 0.006501
+
+trace.merge.txt - 8
+Global Data Missrate: 0.006330
+
+trace.merge.txt - 9
+Global Data Missrate: 0.007109
+
+trace.merge.txt - 10
+Global Data Missrate: 0.006858
+
+trace.merge.txt - 11
+Global Data Missrate: 0.006623
+
+trace.merge.txt - 12
+Global Data Missrate: 0.006466
+
+trace.merge.txt - 13
+Global Data Missrate: 0.006333
+
+trace.merge.txt - 14
+Global Data Missrate: 0.006276
+
+trace.merge.txt - 15
+Global Data Missrate: 0.006236
+
+trace.merge.txt - 16
+Global Data Missrate: 0.006206
+
+trace.merge.txt - 17
+Global Data Missrate: 0.007285
+
+trace.merge.txt - 18
+Global Data Missrate: 0.007104
+
+trace.merge.txt - 19
+Global Data Missrate: 0.006947
+
+trace.merge.txt - 20
+Global Data Missrate: 0.006789
+
+trace.merge.txt - 21
+Global Data Missrate: 0.006640
+
+trace.merge.txt - 22
+Global Data Missrate: 0.006553
+
+trace.merge.txt - 23
+Global Data Missrate: 0.006444
+
+trace.merge.txt - 24
+Global Data Missrate: 0.006367
+
+trace.merge.txt - 25
+Global Data Missrate: 0.006320
+
+trace.merge.txt - 26
+Global Data Missrate: 0.006288
+
+trace.merge.txt - 27
+Global Data Missrate: 0.006248
+
+trace.merge.txt - 28
+Global Data Missrate: 0.006231
+
+trace.merge.txt - 29
+Global Data Missrate: 0.006214
+
+trace.merge.txt - 30
+Global Data Missrate: 0.006199
+
+trace.merge.txt - 31
+Global Data Missrate: 0.006191
+
+trace.merge.txt - 32
+Global Data Missrate: 0.006186
+
+trace.merge.txt - 33
+Global Data Missrate: 0.007461
+
+trace.merge.txt - 34
+Global Data Missrate: 0.007374
+
+trace.merge.txt - 35
+Global Data Missrate: 0.007290
+
+trace.merge.txt - 36
+Global Data Missrate: 0.007193
+
+trace.merge.txt - 37
+Global Data Missrate: 0.007111
+
+trace.merge.txt - 38
+Global Data Missrate: 0.007004
+
+trace.merge.txt - 39
+Global Data Missrate: 0.006915
+
+trace.merge.txt - 40
+Global Data Missrate: 0.006814
+
+trace.merge.txt - 41
+Global Data Missrate: 0.006739
+
+trace.merge.txt - 42
+Global Data Missrate: 0.006657
+
+trace.merge.txt - 43
+Global Data Missrate: 0.006580
+
+trace.merge.txt - 44
+Global Data Missrate: 0.006514
+
+trace.merge.txt - 45
+Global Data Missrate: 0.006471
+
+trace.merge.txt - 46
+Global Data Missrate: 0.006427
+
+trace.merge.txt - 47
+Global Data Missrate: 0.006392
+
+trace.merge.txt - 48
+Global Data Missrate: 0.006352
+
+trace.merge.txt - 49
+Global Data Missrate: 0.006320
+
+trace.merge.txt - 50
+Global Data Missrate: 0.006295
+
+trace.merge.txt - 51
+Global Data Missrate: 0.006258
+
+trace.merge.txt - 52
+Global Data Missrate: 0.006236
+
+trace.merge.txt - 53
+Global Data Missrate: 0.006218
+
+trace.merge.txt - 54
+Global Data Missrate: 0.006199
+
+trace.merge.txt - 55
+Global Data Missrate: 0.006194
+
+trace.merge.txt - 56
+Global Data Missrate: 0.006194
+
+trace.merge.txt - 57
+Global Data Missrate: 0.006186
+
+trace.merge.txt - 58
+Global Data Missrate: 0.006186
+
+trace.merge.txt - 59
+Global Data Missrate: 0.006184
+
+trace.merge.txt - 60
+Global Data Missrate: 0.006184
+
+trace.merge.txt - 61
+Global Data Missrate: 0.006184
+
+trace.merge.txt - 62
+Global Data Missrate: 0.006184
+
+trace.merge.txt - 63
+Global Data Missrate: 0.006184
+
+trace.merge.txt - 64
+Global Data Missrate: 0.006181
+
+trace.merge.txt - 65
+Global Data Missrate: 0.007523
+
+trace.merge.txt - 66
+Global Data Missrate: 0.007483
+
+trace.merge.txt - 67
+Global Data Missrate: 0.007438
+
+trace.merge.txt - 68
+Global Data Missrate: 0.007399
+
+trace.merge.txt - 69
+Global Data Missrate: 0.007359
+
+trace.merge.txt - 70
+Global Data Missrate: 0.007324
+
+trace.merge.txt - 71
+Global Data Missrate: 0.007300
+
+trace.merge.txt - 72
+Global Data Missrate: 0.007272
+
+trace.merge.txt - 73
+Global Data Missrate: 0.007228
+
+trace.merge.txt - 74
+Global Data Missrate: 0.007171
+
+trace.merge.txt - 75
+Global Data Missrate: 0.007091
+
+trace.merge.txt - 76
+Global Data Missrate: 0.007047
+
+trace.merge.txt - 77
+Global Data Missrate: 0.006980
+
+trace.merge.txt - 78
+Global Data Missrate: 0.006933
+
+trace.merge.txt - 79
+Global Data Missrate: 0.006883
+
+trace.merge.txt - 80
+Global Data Missrate: 0.006816
+
+trace.merge.txt - 81
+Global Data Missrate: 0.006771
+
+trace.merge.txt - 82
+Global Data Missrate: 0.006727
+
+trace.merge.txt - 83
+Global Data Missrate: 0.006682
+
+trace.merge.txt - 84
+Global Data Missrate: 0.006630
+
+trace.merge.txt - 85
+Global Data Missrate: 0.006600
+
+trace.merge.txt - 86
+Global Data Missrate: 0.006543
+
+trace.merge.txt - 87
+Global Data Missrate: 0.006521
+
+trace.merge.txt - 88
+Global Data Missrate: 0.006479
+
+trace.merge.txt - 89
+Global Data Missrate: 0.006432
+
+trace.merge.txt - 90
+Global Data Missrate: 0.006395
+
+trace.merge.txt - 91
+Global Data Missrate: 0.006350
+
+trace.merge.txt - 92
+Global Data Missrate: 0.006300
+
+trace.merge.txt - 93
+Global Data Missrate: 0.006271
+
+trace.merge.txt - 94
+Global Data Missrate: 0.006253
+
+trace.merge.txt - 95
+Global Data Missrate: 0.006238
+
+trace.merge.txt - 96
+Global Data Missrate: 0.006233
+
+trace.merge.txt - 97
+Global Data Missrate: 0.006228
+
+trace.merge.txt - 98
+Global Data Missrate: 0.006226
+
+trace.merge.txt - 99
+Global Data Missrate: 0.006214
+
+trace.merge.txt - 100
+Global Data Missrate: 0.006211
+
+
+trace.random64k.txt - 1
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 2
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 3
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 4
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 5
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 6
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 7
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 8
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 9
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 10
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 11
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 12
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 13
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 14
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 15
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 16
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 17
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 18
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 19
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 20
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 21
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 22
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 23
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 24
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 25
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 26
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 27
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 28
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 29
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 30
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 31
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 32
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 33
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 34
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 35
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 36
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 37
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 38
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 39
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 40
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 41
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 42
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 43
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 44
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 45
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 46
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 47
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 48
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 49
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 50
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 51
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 52
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 53
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 54
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 55
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 56
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 57
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 58
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 59
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 60
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 61
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 62
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 63
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 64
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 65
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 66
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 67
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 68
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 69
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 70
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 71
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 72
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 73
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 74
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 75
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 76
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 77
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 78
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 79
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 80
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 81
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 82
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 83
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 84
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 85
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 86
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 87
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 88
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 89
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 90
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 91
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 92
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 93
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 94
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 95
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 96
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 97
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 98
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 99
+Global Data Missrate: 0.003906
+
+trace.random64k.txt - 100
+Global Data Missrate: 0.003906
+
+
