@@ -516,7 +516,7 @@ int main(int argc, char **argv) {
     cachesim_init(atol(argv[2]), atol(argv[3]), atol(argv[4]));
     while (next_line(input));
     cachesim_print_stats();
-    data_insights();
+    //data_insights();
     cachesim_cleanup();
     fclose(input);
     return 0;
